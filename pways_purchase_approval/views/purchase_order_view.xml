@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Purchase order Inherit Form View to Modify it -->
+        <record id="view_order_form_inherit_approval" model="ir.ui.view">
+            <field name="name">view.order.form.inherit.approval</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_rfq_send']" position="after">
+                    <button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
+                </xpath>
+                <xpath expr="//button[@name='button_confirm'][1]" position="replace">
+                <button name="button_confirm" type="object" string="Confirm Order" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve' , 'purchase', 'done', 'cancel', 'approved', 'rejected', 'approval', 'wait_approval'))]}"/>
+            </xpath>
+                <xpath expr="//button[@name='button_confirm'][2]" position="replace">
+                    <button name="button_confirm" type="object"  string="Confirm Order" id="draft_confirm" attrs="{'invisible': [('state', '!=', 'approval')]}"/>
+                </xpath>
+                <field name="date_planned" position="after">
+                    <field name="has_approval" invisible="1"/>
+                    <field name="purchase_approval" invisible="1"/>
+                </field>
+                <xpath expr="//field[@name='state']" position="before">
+                    <button string="Approval" name="action_approval" type="object" attrs="{'invisible': [('has_approval', '=', False)]}" class="oe_highlight"/>
+                    <button string="Reject" name="%(pways_purchase_approval.purchase_approval_rejected_action)d" type="action" attrs="{'invisible': [('has_approval', '=', False)]}" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Approver History">
+                        <field name="purchase_history_ids" mode="tree">
+                            <tree editable="bottom">
+                                <field name="user_id"/>
+                                <field name="status"/>
+                                <field name="date_done"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <field name="reject_reason" label="Reject Reason" readonly="1"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+    <!-- <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel', 'to approve', 'approval', 'rejected'))]</field>
+    </record> -->
+    <record id="ap_res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">ap.res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='auto_receipt_reminder']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="sequence_approval"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="sequence_approval"/>
+                        <div class="text-muted">
+                            User Sequence Wise Approval
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
