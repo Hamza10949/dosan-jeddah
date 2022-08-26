@@ -80,7 +80,7 @@ class PurchaseOrder(models.Model):
         #     ('approval_id.document_type', '=', 'purchase'),
         # ])
         approval = self.env['purchase.approval'].search(
-            [('custom_vendor', '=', self.partner_id.name),
+            [('custom_vendor', '=', self.partner_id.id),
              ('document_type', '=', 'purchase')])
         if not approval:
             approval = self.env['purchase.approval'].search(
