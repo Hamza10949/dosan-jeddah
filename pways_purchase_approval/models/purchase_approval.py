@@ -13,7 +13,7 @@ class PurchaseApproval(models.Model):
     approval_line_ids = fields.One2many(
         'purchase.approval.lines', 'approval_id', string="Approval Line")
     # custom field
-    custom_vendor = fields.Char(string="Vendor")
+    custom_vendor = fields.Many2one('res.partner', string="Vendor")
 
     @api.constrains('approval_line_ids')
     def _check_duplicate_user_id(self):
