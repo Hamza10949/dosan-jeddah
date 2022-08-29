@@ -146,3 +146,9 @@ class PurchaseApprovalsHistory(models.Model):
         ('approve', 'Approved'),
         ('reject', 'Rejected')], default='pending', copy=False, string="Status")
     date_done = fields.Datetime(string="Date")
+
+
+class SiteRequest(models.Model):
+    _inherit = "purchase.requisition"
+    po_type_site = fields.Selection(
+        [('service', 'Service'), ('material', 'Material'), ], 'PO Type')
