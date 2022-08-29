@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
     purchase_approval = fields.Boolean(compute="_compute_purchase_approval")
     # custom field
     po_type = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ], 'PO Type')
+        [('service', 'Service'), ('material', 'Material'), ], 'Type')
 
     def _compute_purchase_approval(self):
         for purchase in self:
@@ -151,4 +151,4 @@ class PurchaseApprovalsHistory(models.Model):
 class SiteRequest(models.Model):
     _inherit = "purchase.requisition"
     po_type_site = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ], 'PO Type')
+        [('service', 'Service'), ('material', 'Material'), ], 'Type')
