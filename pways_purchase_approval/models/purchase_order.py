@@ -16,6 +16,9 @@ class PurchaseOrder(models.Model):
         'purchase.approval.history', 'purchase_id', string="Purchase History", readonly=True)
     reject_reason = fields.Text(string="Reject Reason", copy=False)
     purchase_approval = fields.Boolean(compute="_compute_purchase_approval")
+    # custom field
+    po_type = fields.Selection(
+        [('service', 'Service'), ('material', 'Material'), ], 'PO Type')
 
     def _compute_purchase_approval(self):
         for purchase in self:
