@@ -8,11 +8,13 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_rfq_send']" position="after">
+
                     <!--<button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>-->
                     <button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible':['|',('po_type', '=', 'service'),('state', 'not in', ['draft', 'sent'])]}" />
                 </xpath>
                 <xpath expr="//button[@name='button_confirm'][1]" position="replace">
                 <button name="button_confirm" type="object" string="Confirm Order" attrs="{'invisible': ['|',('po_type', '=', 'material'),('state', 'in', ( 'sent', 'to approve' , 'purchase', 'done', 'cancel', 'approved', 'rejected', 'approval', 'wait_approval'))]}"/>
+
             </xpath>
                 <xpath expr="//button[@name='button_confirm'][2]" position="replace">
                     <button name="button_confirm" type="object"  string="Confirm Order" id="draft_confirm" attrs="{'invisible': [('state', '!=', 'approval')]}"/>
@@ -46,6 +48,7 @@
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel', 'to approve', 'approval', 'rejected'))]</field>
     </record> -->
 
+
     <!--custom-->
     <record id="view_order_form_inherit_custom" model="ir.ui.view">
         <field name="name">view.order.form.inherit.approval</field>
@@ -69,6 +72,7 @@
             </xpath>              
         </field>
     </record>
+
 
 
     <record id="ap_res_config_settings_view_form_purchase" model="ir.ui.view">
