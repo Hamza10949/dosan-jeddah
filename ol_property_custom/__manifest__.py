@@ -9,7 +9,7 @@
     "version": "15.0.1",
 
     "depends": [
-        'project','sale_management', 'contacts', 'product', 'crm', 'ol_sales_agreement_report', 'account',
+        'project', 'sale_management', 'contacts', 'product', 'crm', 'account',
     ],
 
     "data": [
@@ -20,8 +20,8 @@
         # 'views/installment_invoice_button.xml',
 
     ],
-    
-    "images": [ ],
+
+    "images": [],
     "auto_install": False,
     "application": True,
     "installable": True,
