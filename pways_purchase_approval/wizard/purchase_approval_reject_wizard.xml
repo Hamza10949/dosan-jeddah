@@ -8,7 +8,11 @@
             <form string="Approval Reject Reason">
                 <sheet>
                     <group>
-                        <field name="reject_reason"/>
+                        <field name="reject_reason_sel"/>
+                    </group>
+                         <h2 style="text-align: center;">OR</h2>
+                    <group>
+                          <field name="reject_reason"/>
                     </group>
                 </sheet>
                 <footer>
