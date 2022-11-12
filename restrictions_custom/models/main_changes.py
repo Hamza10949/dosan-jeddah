@@ -22,3 +22,11 @@ class product_selection(models.Model):
     # def po_product(self):
     #     name_prod=self.display_name
     #     name_prod.split
+
+
+class proj_cus(models.Model):
+    _inherit = "project.project"
+    proj_value = fields.Monetary(string="Project Value")
+    proj_loc = fields.Char(string="Project location")
+    Received_Client_Payment = fields.Monetary(
+        string="Received Client Payment ")

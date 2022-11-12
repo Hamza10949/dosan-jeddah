@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="proj_fields" model="ir.ui.view" >
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    
+                      <field name="proj_value"/>
+                      <field name="Received_Client_Payment"/>
+                      <field name="proj_loc"/>
+                     
+                      
+                      
+                 </xpath> 
+                  
+            </field>
+</record>
+
+
+
+</odoo>
