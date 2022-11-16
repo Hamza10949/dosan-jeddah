@@ -8,6 +8,18 @@ class po_fields(models.Model):
     product_code = fields.Char(
         string="Product Code ", related='product_id.default_code')
 
+    product_onhand = fields.Char(
+        string="On hand qty ", compute="_get_qty_available")
+
+    @api.depends('product_id')
+    def _get_qty_available(self):
+        qty_line_obj = self.env['product.template']
+        for rec in self:
+            qty_available_obj = qty_line_obj.search(
+                [['name', '=', rec.product_id.name]])
+
+            rec.product_onhand = qty_available_obj.qty_available
+
 
 class product_selection(models.Model):
     _inherit = "product.product"
