@@ -42,3 +42,8 @@ class proj_cus(models.Model):
     proj_loc = fields.Char(string="Project location")
     Received_Client_Payment = fields.Monetary(
         string="Received Client Payment ")
+
+
+class payment_register(models.TransientModel):
+    _inherit = "account.payment.register"
+    percentage = fields.Monetary(string="percentage")
