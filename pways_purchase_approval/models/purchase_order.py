@@ -9,7 +9,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
     _description = "Purchase Approval"
 
-    state = fields.Selection(selection_add=[('wait_approval', 'Partially Approved'),
+    state = fields.Selection(selection_add=[('wait_approval', 'Waiting For Approval'),
                                             ('approval', 'Approval'),
                                             ('rejected', 'Rejected')])
     has_approval = fields.Boolean(compute="_compute_has_approval")
