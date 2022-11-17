@@ -5,12 +5,11 @@ from datetime import datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
-
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
     _description = "Purchase Approval"
 
-    state = fields.Selection(selection_add=[('wait_approval', 'Waiting For Approval'),
+    state = fields.Selection(selection_add=[('wait_approval', 'Partially Approved'),
                                             ('approval', 'Approval'),
                                             ('rejected', 'Rejected')])
     has_approval = fields.Boolean(compute="_compute_has_approval")
@@ -43,8 +42,6 @@ class PurchaseOrder(models.Model):
                 purchase.purchase_approval = True
             else:
                 purchase.purchase_approval = True
-
-
 
     def _compute_has_approval(self):
         for purchase in self:
@@ -132,7 +129,6 @@ class PurchaseOrder(models.Model):
         #         else:
         #             self.write({'state': 'approval'})
 
-
     def button_confirm(self):
         for order in self:
             if order.state not in ['draft', 'sent', 'approval']:
@@ -166,4 +162,3 @@ class SiteRequest(models.Model):
     _inherit = "purchase.requisition"
     po_type_site = fields.Selection(
         [('service', 'Service'), ('material', 'Material'), ], 'Type')
-
