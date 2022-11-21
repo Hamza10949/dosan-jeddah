@@ -19,6 +19,7 @@
         'security/p_restrict.xml',
         'view/restrict.xml',
         'view/project_fields.xml',
+        'view/inventory_custom_fields.xml',
 
 
     ],
