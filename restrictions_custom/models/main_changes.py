@@ -46,4 +46,27 @@ class proj_cus(models.Model):
 
 class payment_register(models.TransientModel):
     _inherit = "account.payment.register"
-    percentage = fields.Monetary(string="percentage")
+    percentage = fields.Monetary(string="percentage %")
+
+    @api.onchange('percentage')
+    def _onchange_field_name(self):
+        if self.percentage:
+            amount_per = 0
+            amount_per = (self.percentage/100)*self.amount
+            #self.write({'amount': amount_per})
+            self.amount = amount_per
+
+    @api.model
+    def _create_payments(self):
+
+        payments = super(payment_register, self)._create_payments()
+
+        for payment in payments:
+            payment.percentage = self.percentage
+           # payment.amount = (payment.percentage/payment.amount)*100
+        return payments
+
+
+class extpayment(models.Model):
+    _inherit = "account.payment"
+    percentage = fields.Monetary(string='Percentage %')
