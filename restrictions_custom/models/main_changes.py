@@ -21,6 +21,25 @@ class po_fields(models.Model):
             rec.product_onhand = qty_available_obj.qty_available
 
 
+class po_fields_invoice_lines(models.Model):
+    _inherit = "purchase.order.line"
+
+    product_code_po = fields.Char(
+        string="Product Code ", related='product_id.default_code')
+
+    product_onhand_po = fields.Char(
+        string="On hand qty ", compute="_get_qty_available")
+
+    @api.depends('product_id')
+    def _get_qty_available(self):
+        qty_line_obj = self.env['product.template']
+        for rec in self:
+            qty_available_obj = qty_line_obj.search(
+                [['name', '=', rec.product_id.name]])
+
+            rec.product_onhand_po = qty_available_obj.qty_available
+
+
 class product_selection(models.Model):
     _inherit = "product.product"
 
