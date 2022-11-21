@@ -50,11 +50,17 @@ class payment_register(models.TransientModel):
 
     @api.onchange('percentage')
     def _onchange_field_name(self):
+        check_bill_amount = self.env['account.move'].search(
+            [('move_type', '=', 'in_invoice'), ('name', '=', self.communication)])
+        amnt = check_bill_amount.amount_residual
+
         if self.percentage:
             amount_per = 0
-            amount_per = (self.percentage/100)*self.amount
+            amount_per = (self.percentage/100)*amnt
             #self.write({'amount': amount_per})
             self.amount = amount_per
+        else:
+            self.amount = amnt
 
     @api.model
     def _create_payments(self):
