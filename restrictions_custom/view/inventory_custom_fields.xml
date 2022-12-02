@@ -10,6 +10,13 @@
                        <field name="product_onhand_inv"/> 
                          
                  </xpath>      
+
+                 <xpath expr="//field[@name='location_id']" position="attributes">
+                        
+                       <attribute name="domain">[('usage', '=', 'internal')]</attribute>
+                         
+                 </xpath> 
+
             </field>
         </record>
 
