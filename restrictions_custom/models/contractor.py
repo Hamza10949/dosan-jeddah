@@ -24,6 +24,8 @@ class Inherit_PurchaseRequi(models.Model):
                     'currency_id': self.currency_id.id,
                     'date_planned': datetime.today(),
                     'date_order': datetime.today(),
+                    'po_type': self.po_type_site,
+
 
 
                 })
