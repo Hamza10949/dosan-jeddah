@@ -20,6 +20,7 @@
         'view/restrict.xml',
         'view/project_fields.xml',
         'view/inventory_custom_fields.xml',
+        'view/contractor.xml',
         'view/product_cus_chngs.xml',
 
 

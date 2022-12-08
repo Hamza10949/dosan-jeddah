@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="show_field_contractor" model="ir.ui.view">
+            <field name="name">purchase.requisition.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form" />
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_analytic_id']" position="after">
+
+                <field name="contractor"  />
+                
+            </xpath>
+            
+        
+            
+            </field>
+        </record>
+
+
+</odoo>
