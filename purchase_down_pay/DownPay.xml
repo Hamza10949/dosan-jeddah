@@ -15,6 +15,7 @@
                     class="oe_stat_button"
                     icon="fa-money">
                     <field name="cout_payment" widget="statinfo" string="Payments" help="Down Payments"/>
+                    <field name="total_amount_pays" invisible="1"/>
                     <!-- <field name="picking_ids" invisible="1"/> -->
                 </button>
             </xpath>
