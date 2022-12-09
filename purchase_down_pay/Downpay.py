@@ -36,8 +36,8 @@ class PurchaseOrder(models.Model):
             for rec in self:
                 if rec.cout_payment > 1 and rec.name == record.ref:
                     total += record.amount
-                else:
-                    self.total_amount_pays = 0
+                # else:
+                #     self.total_amount_pays = 0
         self.total_amount_pays = total
 
     def compute_amount_field(self):
@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
                         'default_partner_type': 'supplier',
                         'default_ref': self.name,
                         'default_payment_type': 'outbound',
-                        'default_amount': self.amount_total}
+                        'default_amount': self.compute_amount_field()}
         }
 
     def action_payments(self):
