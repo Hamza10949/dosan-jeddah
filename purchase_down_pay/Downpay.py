@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
                         'default_partner_type': 'supplier',
                         'default_ref': self.name,
                         'default_payment_type': 'outbound',
-                        'default_amount': self.amount_total}
+                        'default_amount': self.compute_amount_field()}
         }
 
     def action_payments(self):
