@@ -71,27 +71,92 @@ class payment_register(models.TransientModel):
     def _onchange_field_name(self):
         check_bill_amount = self.env['account.move'].search(
             [('move_type', '=', 'out_invoice'), ('name', '=', self.communication)])
-        amnt = check_bill_amount.amount_residual
 
-        if self.percentage:
-            amount_per = 0
-            amount_per = (self.percentage/100)*amnt
-            #self.write({'amount': amount_per})
-            self.amount = amount_per
-        else:
-            self.amount = amnt
+        check_vendor_bill_amount = self.env['account.move'].search(
+            [('move_type', '=', 'in_invoice'), ('name', '=', self.communication)])
 
-    @api.model
-    def _create_payments(self):
+        if check_bill_amount:
+            amnt = check_bill_amount.amount_residual
+            #raise UserError(amnt)
+            if self.percentage > 0:
+                amount_per = 0
+                amount_per = (self.percentage/100) * amnt
+                #self.write({'amount': amount_per})
+                self.amount = amount_per
+            else:
+                self.amount = amnt
 
-        payments = super(payment_register, self)._create_payments()
+        @api.model
+        def _create_payments(self):
 
-        for payment in payments:
-            payment.percentage = self.percentage
-           # payment.amount = (payment.percentage/payment.amount)*100
-        return payments
+            payments = super(payment_register, self)._create_payments()
+
+            for payment in payments:
+                payment.percentage = self.percentage
+            # payment.amount = (payment.percentage/payment.amount)*100
+            return payments
+
+        if check_vendor_bill_amount:
+            amnt = check_vendor_bill_amount.amount_residual
+            #raise UserError(amnt)
+            if self.percentage > 0:
+                amount_per = 0
+                amount_per = (self.percentage/100) * amnt
+                #self.write({'amount': amount_per})
+                self.amount = amount_per
+            else:
+                self.amount = amnt
+
+        @api.model
+        def _create_payments(self):
+
+            payments = super(payment_register, self)._create_payments()
+
+            for payment in payments:
+                payment.percentage = self.percentage
+            # payment.amount = (payment.percentage/payment.amount)*100
+            return payments
+
+    # @api.onchange('percentage')
+    # def _onchange_field_name(self):
+    #     check_bill_amount = self.env['account.move'].search(
+    #         [('move_type', '=', 'out_invoice'), ('name', '=', self.communication)])
+    #     amnt = check_bill_amount.amount_residual
+
+    #     if self.percentage:
+    #         amount_per = 0
+    #         amount_per = (self.percentage/100)*amnt
+    #         #self.write({'amount': amount_per})
+    #         self.amount = amount_per
+    #     else:
+    #         self.amount = amnt
+
+    # @api.model
+    # def _create_payments(self):
+
+    #     payments = super(payment_register, self)._create_payments()
+
+    #     for payment in payments:
+    #         payment.percentage = self.percentage
+    #        # payment.amount = (payment.percentage/payment.amount)*100
+    #     return payments
 
 
 class extpayment(models.Model):
     _inherit = "account.payment"
     percentage = fields.Monetary(string='Percentage %')
+
+    @api.onchange('percentage')
+    def _onchange_field_name(self):
+        check_po_amount = self.env['purchase.order'].search(
+            [('name', '=', self.ref)])
+        amnt = check_po_amount.amount_total
+
+        #raise UserError(amnt)
+        if self.percentage > 0:
+            amount_per = 0
+            amount_per = (self.percentage/100) * amnt
+            #self.write({'amount': amount_per})
+            self.amount = amount_per
+        else:
+            self.amount = amnt
