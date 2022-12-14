@@ -37,7 +37,7 @@ class Inherit_PurchaseRequi(models.Model):
                         'product_code_po': mov_id.product_code,
                         'name': mov_id.product_id.name,
                         'product_qty': mov_id.product_qty,
-                        'price_unit': mov_id.price_unit,
+                        'price_unit': mov_id.product_id.lst_price,
                         'account_analytic_id': mov_id.account_analytic_id.id,
                         'date_planned': datetime.today(),
                         'price_subtotal': mov_id.product_qty*mov_id.price_unit,
