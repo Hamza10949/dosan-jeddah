@@ -18,9 +18,9 @@ class Inherit_PurchaseRequi(models.Model):
             if rec.line_ids:
                 for i in rec.line_ids:
                     if i.account_analytic_id:
-                        rec.project_lv = i.account_analytic_id.name
+                        rec['project_lv'] = i.account_analytic_id.name
                     else:
-                        rec.project_lv = "-"
+                        rec['project_lv'] = "-"
 
     def create_aljazira_rfq(self):
         aljazira = self.env['res.partner'].search([('id', "=", 15)])
