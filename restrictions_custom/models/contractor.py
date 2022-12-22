@@ -11,16 +11,17 @@ class Inherit_PurchaseReq(models.Model):
 
 class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
-    project_lv = fields.Char(string="Project", compute="site_req_projcet")
+    project_lv = fields.Char(string="Project")
 
-    def site_req_projcet(self):
-        for rec in self:
-            if rec.line_ids:
-                for i in rec.line_ids:
-                    if i.account_analytic_id:
-                        rec['project_lv'] = i.account_analytic_id.name
-                    else:
-                        rec['project_lv'] = "-"
+    # def site_req_projcet(self):
+    #     site_req = self.env['purchase.requisition'].search([()])
+    #     for rec in site_req:
+    #         if rec.line_ids:
+    #             for i in rec.line_ids:
+    #                 if i.account_analytic_id:
+    #                     rec['project_lv'] = i.account_analytic_id.name
+    #                 else:
+    #                     rec['project_lv'] = "-"
 
     def create_aljazira_rfq(self):
         aljazira = self.env['res.partner'].search([('id', "=", 15)])
