@@ -20,8 +20,8 @@ class Inherit_PurchaseRequi(models.Model):
                     #rec.project_lv = i.account_analytic_id.name
                     PRL = rec.env['account.analytic.account'].search(
                         [('id', '=', i.account_analytic_id.id)])
-                    rec["project_lv"] = PRL.name
-                    #raise UserError(PRL.name)
+                rec["project_lv"] = PRL.name
+                #raise UserError(PRL.name)
 
     # def site_req_projcet(self):
     #     site_req = self.env['purchase.requisition'].search([()])
