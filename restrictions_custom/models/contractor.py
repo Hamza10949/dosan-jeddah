@@ -11,7 +11,17 @@ class Inherit_PurchaseReq(models.Model):
 
 class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
-    project_lv = fields.Char(string="Project")
+    project_lv = fields.Char(string="Project", compute="site_req_projcet")
+
+    def site_req_projcet(self):
+        for rec in self:
+            if rec.line_ids:
+                for i in rec.line_ids:
+                    #rec.project_lv = i.account_analytic_id.name
+                    PRL = self.env['account.analytic.account'].search(
+                        [('id', '=', i.account_analytic_id.id)])
+                    rec["project_lv"] = PRL.name
+                    #raise UserError(PRL.name)
 
     # def site_req_projcet(self):
     #     site_req = self.env['purchase.requisition'].search([()])
