@@ -18,7 +18,7 @@ class Inherit_PurchaseRequi(models.Model):
             if rec.line_ids:
                 for i in rec.line_ids:
                     #rec.project_lv = i.account_analytic_id.name
-                    PRL = self.env['account.analytic.account'].search(
+                    PRL = rec.env['account.analytic.account'].search(
                         [('id', '=', i.account_analytic_id.id)])
                     rec["project_lv"] = PRL.name
                     #raise UserError(PRL.name)
