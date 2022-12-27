@@ -62,17 +62,19 @@
 
 
 <record id="custom_fields_project_lv" model="ir.ui.view">
-            <field name="name">custom.view.project.lv</field>
+            <field name="name">custom.view.project.plv</field>
             <field name="model">purchase.requisition</field>
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree" />
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="project_plv" />
+                    <field name="project_lv" />
                     
             </field>
                 
             </field>
         </record>
+
+
 
 
 
