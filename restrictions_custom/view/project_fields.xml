@@ -67,7 +67,7 @@
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree" />
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="project_lv" />
+                    <field name="project_plv" />
                     
             </field>
                 
