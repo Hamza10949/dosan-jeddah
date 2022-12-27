@@ -8,7 +8,7 @@ from datetime import datetime
 class Inherit_PurchaseOrder_rfq(models.Model):
     _inherit = "purchase.order"
     project_slv=fields.Char(string="Project",compute="_purchase_order_project")
-    approval_history_lv=(string="Approval status",compute="_purchase_order_approval")
+    approval_history_lv=fields.Char(string="Approval status",compute="_purchase_order_approval")
 
     def _purchase_order_project(self):
         self.project_slv=''
@@ -20,7 +20,7 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                         rec["project_slv"]=lines.account_analytic_id.name
 
     def _purchase_order_approval(self):
-        
+
         self.approval_history_lv=''
         lst=[]
         for i in self:
