@@ -11,7 +11,7 @@ class Inherit_PurchaseReq(models.Model):
 
 class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
-   
+    project_lv = fields.Char(string="Project")
     project_plv = fields.Char(string="Project",compute="_site_req_project")
     
     
