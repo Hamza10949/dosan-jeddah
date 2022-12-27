@@ -61,7 +61,7 @@
     </record>
 
 
-<record id="custom_fields_project_lv" model="ir.ui.view">
+<record id="custom_fields_tv_project_plv" model="ir.ui.view">
             <field name="name">custom.view.project.plv</field>
             <field name="model">purchase.requisition</field>
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree" />
