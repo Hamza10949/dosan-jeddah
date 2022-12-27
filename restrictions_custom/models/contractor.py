@@ -3,12 +3,7 @@ from odoo.exceptions import UserError
 from datetime import datetime
 
 
-class Inherit_PurchaseReq(models.Model):
-    _inherit = "purchase.requisition.line"
-    contractor = fields.Many2one(
-        'res.partner', string="Contractor", domain="[('category_id', '=', 6)]")
-
-class Inherit_PurchaseOrder(models.Model):
+class Inherit_PurchaseOrder_rfq(models.Model):
     _inherit = "purchase.order"
     project_slv=fields.Char(string="Project",compute="_purchase_order_project")
 
@@ -22,6 +17,13 @@ class Inherit_PurchaseOrder(models.Model):
                     rec["project_slv"]=lines.account_analytic_id.name
                         
     
+
+
+
+class Inherit_PurchaseReq(models.Model):
+    _inherit = "purchase.requisition.line"
+    contractor = fields.Many2one(
+        'res.partner', string="Contractor", domain="[('category_id', '=', 6)]")
 
 
 class Inherit_PurchaseRequi(models.Model):
@@ -40,8 +42,6 @@ class Inherit_PurchaseRequi(models.Model):
                 project= rec.line_ids
                 for lines in project:
                     rec["project_plv"]=lines.account_analytic_id.name
-
-
                     
             
 
