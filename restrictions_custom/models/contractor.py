@@ -4,8 +4,19 @@ from datetime import datetime
 
 
                         
-    
+   
+class Inherit_PurchaseOrder_rfq(models.Model):
+    _inherit = "purchase.order"
+    project_slv=fields.Char(string="Project",compute="_purchase_order_project")
 
+    def _purchase_order_project(self):
+        self.project_slv=''
+        for rec in self:
+            if rec.requisition_id:
+                project= rec.requisition_id.line_ids
+                if project:
+                    for lines in project:
+                        rec["project_slv"]=lines.account_analytic_id.name
 
 
 class Inherit_PurchaseReq(models.Model):
