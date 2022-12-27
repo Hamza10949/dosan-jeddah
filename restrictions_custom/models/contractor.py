@@ -8,6 +8,7 @@ from datetime import datetime
 class Inherit_PurchaseOrder_rfq(models.Model):
     _inherit = "purchase.order"
     project_slv=fields.Char(string="Project",compute="_purchase_order_project")
+    approval_history_lv=(string="Approval status",compute="_purchase_order_approval")
 
     def _purchase_order_project(self):
         self.project_slv=''
@@ -17,6 +18,24 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                 if project:
                     for lines in project:
                         rec["project_slv"]=lines.account_analytic_id.name
+
+    def _purchase_order_approval(self):
+        
+        self.approval_history_lv=''
+        lst=[]
+        for i in self:
+            if i.purchase_history_ids:
+                for lines in i.purchase_history_ids:
+                    userid=lines.user_id.name
+                    userstatus=lines.status
+                    approver=userid+" : "+userstatus
+                    lst.append(approver)
+                if len(lst)==1:
+                    i["approval_history_lv"]=approver
+                elif len(lst)>=2:
+                    all_approvers=' & '.join(lst)
+                    i["approval_history_lv"]=all_approvers
+               
 
 
 class Inherit_PurchaseReq(models.Model):
