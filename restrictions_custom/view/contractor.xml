@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
 
-                <field name="project_lv" />
+                <field name="project_plv" />
                 
             </xpath>
             

@@ -11,17 +11,20 @@ class Inherit_PurchaseReq(models.Model):
 
 class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
-    project_lv = fields.Char(string="Project",compute="_site_req_project")
+    project_lv = fields.Char(string="Project")
+    project_plv = fields.Char(string="Project",compute="_site_req_project")
+    
+    
 
 
 
     def _site_req_project(self):
-        self.project_lv=''
+        self.project_plv=''
         for rec in self:
             if rec.line_ids:
                 project= rec.line_ids
                 for lines in project:
-                    rec["project_lv"]=lines.account_analytic_id.name
+                    rec["project_plv"]=lines.account_analytic_id.name
                     
             
 
