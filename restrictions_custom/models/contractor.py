@@ -18,8 +18,8 @@ class Inherit_PurchaseRequi(models.Model):
     def _site_req_project(self):
         self.project_lv=''
         for rec in self:
-            if i.line_ids:
-                project= i.line_ids
+            if rec.line_ids:
+                project= rec.line_ids
                 for lines in project:
                     rec["project_lv"]=lines.account_analytic_id.name
                     
