@@ -22,13 +22,13 @@ class Inherit_PurchaseOrder_rfq(models.Model):
     def _purchase_order_approval(self):
 
         self.approval_history_lv=''
-        lst=[]
+        
         for i in self:
             if i.purchase_history_ids:
+                lst=[]
                 for lines in i.purchase_history_ids:
                     userid=lines.user_id.name
                     userstatus=lines.status
-                    approver=userid+" : "+userstatus
                     approver=userid+" : "+userstatus
                     if approver not in lst:
                         lst.append(approver)
