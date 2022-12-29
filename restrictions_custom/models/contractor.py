@@ -32,7 +32,7 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                         if approver not in lst:
                             lst.append(approver)
                     if lines.status=='approve':
-                        i["approval_history_lv"]="APPROVED!"
+                        i["approval_history_lv"]="Approved!"
                 if len(lst)==1:
                     i["approval_history_lv"]=approver
                 elif len(lst)>=2:
