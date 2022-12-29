@@ -36,8 +36,8 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                 if len(lst)==1:
                     i["approval_history_lv"]=approver
                 elif len(lst)>=2:
-                    all_approvers=' & '.join(lst)
-                    i["approval_history_lv"]=all_approvers
+                    # all_approvers=' & '.join(lst)
+                    i["approval_history_lv"]=lst[0]
 
         
                
