@@ -20,23 +20,24 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                         rec["project_slv"]=lines.account_analytic_id.name
 
     def _purchase_order_approval(self):
-
         self.approval_history_lv=''
-        
         for i in self:
             if i.purchase_history_ids:
                 lst=[]
                 for lines in i.purchase_history_ids:
-                    userid=lines.user_id.name
-                    userstatus=lines.status
-                    approver=userid+" : "+userstatus
-                    if approver not in lst:
-                        lst.append(approver)
+                    if lines.status=='pending':
+                        userid=lines.user_id.name
+                        userstatus=lines.status
+                        approver=userid+" : "+userstatus
+                        if approver not in lst:
+                            lst.append(approver)
                 if len(lst)==1:
                     i["approval_history_lv"]=approver
                 elif len(lst)>=2:
                     all_approvers=' & '.join(lst)
                     i["approval_history_lv"]=all_approvers
+
+        
                
 
 
