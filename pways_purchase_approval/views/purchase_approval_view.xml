@@ -23,6 +23,7 @@
 
                         <group>
                             <field name="custom_vendor"/>
+                            <field name="new_po_type"/>
                         </group>
 
                     </group>
