@@ -43,6 +43,17 @@ class PurchaseOrder(models.Model):
             else:
                 purchase.purchase_approval = True
 
+             # custom work
+            approvals_vendor_line = self.env['purchase.approval'].search([
+                ("new_po_type", '=', purchase.po_type)
+            ])
+            if approvals_vendor_line:
+                purchase.purchase_approval = True
+            else:
+                purchase.purchase_approval = True
+
+            
+
     def _compute_has_approval(self):
         for purchase in self:
             approval_sequence = self.env.company.sequence_approval
@@ -94,12 +105,30 @@ class PurchaseOrder(models.Model):
         approval = self.env['purchase.approval'].search(
             [('custom_vendor', '=', self.partner_id.id),
              ('document_type', '=', 'purchase')])
+    
+        second_approval = self.env['purchase.approval'].search(
+            [('new_po_type', '=', self.po_type),
+             ('document_type', '=', 'purchase')]) 
+
         if not approval:
             approval = self.env['purchase.approval'].search(
                 [('custom_vendor', '=', False),
                  ('document_type', '=', 'purchase')])
         # raise UserError(approval)
         for ai in approval:
+            approval_lines = self.env['purchase.approval.lines'].search([
+                ('limit', '<=', self.amount_total), ('approval_id', '=', ai.id)
+                # ('approval_id.document_type', '=', 'purchase'),
+            ])
+            # raise UserError(approval_lines)
+            if approval_lines:
+                for line in approval_lines:
+                    data.append((0, 0, {'user_id': line.user_id.id}))
+                self.purchase_history_ids = data
+                self.write({'state': 'wait_approval'})
+            else:
+                self.write({'state': 'approval'})
+        for ai in second_approval:
             approval_lines = self.env['purchase.approval.lines'].search([
                 ('limit', '<=', self.amount_total), ('approval_id', '=', ai.id)
                 # ('approval_id.document_type', '=', 'purchase'),
