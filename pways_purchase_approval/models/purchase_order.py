@@ -11,7 +11,8 @@ class PurchaseOrder(models.Model):
 
     state = fields.Selection(selection_add=[('wait_approval', 'Waiting For Approval'),
                                             ('approval', 'Approval'),
-                                            ('rejected', 'Rejected')])
+                                            ('rejected', 'Rejected'),
+                                            ('partial_approve', 'Partial Approved')])
     has_approval = fields.Boolean(compute="_compute_has_approval")
 
     purchase_history_ids = fields.One2many(
@@ -65,7 +66,7 @@ class PurchaseOrder(models.Model):
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
                 if is_rejected:
                     purchase.write({'state': 'rejected'})
-                if not is_rejected and purchase.state == 'wait_approval' and user_id and user_id.id == self.env.user.id:
+                if not is_rejected and purchase.state == 'wait_approval'  and user_id and user_id.id == self.env.user.id:
 
                     purchase.has_approval = True
                 else:
@@ -91,6 +92,10 @@ class PurchaseOrder(models.Model):
 
         if self.purchase_history_ids and all([line.status == 'approve' for line in self.purchase_history_ids]):
             self.write({'state': 'approval'})
+        elif self.purchase_history_ids and [line.status == 'approve' for line in self.purchase_history_ids]:
+            self.write({'state': 'partial_approve'})
+        
+       
 
     def too_approve(self):
 
