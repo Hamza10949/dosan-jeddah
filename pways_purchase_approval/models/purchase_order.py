@@ -43,6 +43,14 @@ class PurchaseOrder(models.Model):
             else:
                 purchase.purchase_approval = True
 
+            approval_vendor_line = self.env['purchase.approval'].search([
+                ("new_po_type", '=', purchase.po_type)
+            ])
+            if approval_vendor_line:
+                purchase.purchase_approval = True
+            else:
+                purchase.purchase_approval = True
+
     def _compute_has_approval(self):
         for purchase in self:
             approval_sequence = self.env.company.sequence_approval
@@ -92,11 +100,12 @@ class PurchaseOrder(models.Model):
         #     ('approval_id.document_type', '=', 'purchase'),
         # ])
         approval = self.env['purchase.approval'].search(
-            [('custom_vendor', '=', self.partner_id.id),
-             ('document_type', '=', 'purchase')])
+            ["|",('custom_vendor', '=', self.partner_id.id),
+             ('document_type', '=', 'purchase'), ("new_po_type", '=', self.po_type)])
         if not approval:
             approval = self.env['purchase.approval'].search(
                 [('custom_vendor', '=', False),
+                 ("new_po_type", '=', False),
                  ('document_type', '=', 'purchase')])
         # raise UserError(approval)
         for ai in approval:
