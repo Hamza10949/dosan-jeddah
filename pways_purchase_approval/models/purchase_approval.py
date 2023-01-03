@@ -16,7 +16,7 @@ class PurchaseApproval(models.Model):
     # custom field
     custom_vendor = fields.Many2one('res.partner', string="Vendor")
     new_po_type=fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ], 'Type')
+        [('service', 'Service'), ('rent', 'Rent'), ], 'Type')
 
     # @api.constrains('approval_line_ids')
     # def _check_duplicate_user_id(self):
