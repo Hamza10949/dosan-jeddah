@@ -13,10 +13,10 @@
                 <xpath expr="//button[@name='action_rfq_send']" position="after">
 
                     <!--<button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>-->
-                    <button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible':['|',('po_type', '=', 'service'),('state', 'not in', ['draft', 'sent'])]}" />
+                    <button name="too_approve" type="object" class="oe_highlight" string="Approval" attrs="{'invisible':[('state', 'not in', ['draft', 'sent'])]}" />
                 </xpath>
                 <xpath expr="//button[@name='button_confirm'][1]" position="replace">
-                <button name="button_confirm" type="object" string="Confirm Order" attrs="{'invisible': ['|',('po_type', '=', 'material'),('state', 'in', ( 'sent', 'to approve' , 'purchase', 'done', 'cancel', 'approved', 'rejected', 'approval', 'wait_approval'))]}"/>
+                <button name="button_confirm" type="object" string="Confirm Order" attrs="{'invisible': ['|',('po_type', '=', 'material'),('state', 'in', ( 'sent', 'to approve' , 'purchase', 'done', 'cancel', 'approved', 'rejected', 'approval', 'wait_approval','partial_approve'))]}"/>
 
             </xpath>
                 <xpath expr="//button[@name='button_confirm'][2]" position="replace">
