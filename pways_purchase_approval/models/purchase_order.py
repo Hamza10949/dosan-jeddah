@@ -66,7 +66,7 @@ class PurchaseOrder(models.Model):
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
                 if is_rejected:
                     purchase.write({'state': 'rejected'})
-                if not is_rejected and purchase.state == 'wait_approval'  and user_id and user_id.id == self.env.user.id:
+                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and user_id and user_id.id == self.env.user.id:
 
                     purchase.has_approval = True
                 else:
@@ -78,7 +78,7 @@ class PurchaseOrder(models.Model):
                 is_rejected = any(
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
 
-                if not is_rejected and purchase.state == 'wait_approval' and approval_id and approval_id.status == 'pending':
+                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and approval_id and approval_id.status == 'pending':
                     purchase.has_approval = True
                 else:
                     purchase.has_approval = False
