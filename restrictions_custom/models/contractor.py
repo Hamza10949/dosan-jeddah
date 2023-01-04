@@ -3,44 +3,47 @@ from odoo.exceptions import UserError
 from datetime import datetime
 
 
-                        
-   
 class Inherit_PurchaseOrder_rfq(models.Model):
     _inherit = "purchase.order"
-    project_slv=fields.Char(string="Project",compute="_purchase_order_project")
-    approval_history_lv=fields.Char(string="Approval status",compute="_purchase_order_approval")
+    project_slv = fields.Char(
+        string="Project", compute="_purchase_order_project")
+    approval_history_lv = fields.Char(
+        string="Approval status", compute="_purchase_order_approval")
 
+    # def _purchase_order_project(self):
+    #     self.project_slv=''
+    #     for rec in self:
+    #         if rec.order_line:
+    #             project= rec.requisition_id.line_ids
+    #             if project:
+    #                 for lines in project:
+    #                     rec["project_slv"]=lines.account_analytic_id.name
     def _purchase_order_project(self):
-        self.project_slv=''
+        self.project_slv = ''
         for rec in self:
-            if rec.requisition_id:
-                project= rec.requisition_id.line_ids
-                if project:
-                    for lines in project:
-                        rec["project_slv"]=lines.account_analytic_id.name
+            if rec.order_line:
+                for lines in rec.order_line:
+                    rec["project_slv"] = lines.account_analytic_id.name
 
     def _purchase_order_approval(self):
-        self.approval_history_lv=''
+        self.approval_history_lv = ''
         for i in self:
             if i.purchase_history_ids:
-                lst=[]
+                lst = []
                 for lines in i.purchase_history_ids:
-                    if lines.status=='pending':
-                        userid=lines.user_id.name
-                        userstatus=lines.status
-                        approver=userid+" : "+userstatus
+                    if lines.status == 'pending':
+                        userid = lines.user_id.name
+                        userstatus = lines.status
+                        approver = userid+" : "+userstatus
                         if approver not in lst:
                             lst.append(approver)
-                    if lines.status=='approve':
-                        i["approval_history_lv"]="Approved!"
-                if len(lst)==1:
-                    i["approval_history_lv"]=approver
-                elif len(lst)>=2:
+                    if lines.status == 'approve':
+                        i["approval_history_lv"] = "Approved!"
+                if len(lst) == 1:
+                    i["approval_history_lv"] = approver
+                elif len(lst) >= 2:
                     # all_approvers=' & '.join(lst)
-                    i["approval_history_lv"]=lst[0]
-
-        
-               
+                    i["approval_history_lv"] = lst[0]
 
 
 class Inherit_PurchaseReq(models.Model):
@@ -52,22 +55,15 @@ class Inherit_PurchaseReq(models.Model):
 class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
     project_lv = fields.Char(string="Project")
-    project_plv = fields.Char(string="Project",compute="_site_req_project")
-    
-    
-
-
+    project_plv = fields.Char(string="Project", compute="_site_req_project")
 
     def _site_req_project(self):
-        self.project_plv=''
+        self.project_plv = ''
         for rec in self:
-            if rec.order_line:
-                project= rec.order_line
+            if rec.line_ids:
+                project = rec.line_ids
                 for lines in project:
-                    rec["project_plv"]=lines.account_analytic_id.name
-                    
-            
-
+                    rec["project_plv"] = lines.account_analytic_id.name
 
     def create_aljazira_rfq(self):
         aljazira = self.env['res.partner'].search([('id', "=", 15)])
