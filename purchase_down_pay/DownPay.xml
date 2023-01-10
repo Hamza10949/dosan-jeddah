@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_confirm']" position="after">
+                <button name="action_bill" type="object" string="Create Payment" states="purchase,done"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button type="object"
+                    name="action_payments"
+                    class="oe_stat_button"
+                    icon="fa-money">
+                    <field name="cout_payment" widget="statinfo" string="Payments" help="Down Payments"/>
+                    <field name="total_amount_pays" invisible="1"/>
+                    <!-- <field name="picking_ids" invisible="1"/> -->
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
