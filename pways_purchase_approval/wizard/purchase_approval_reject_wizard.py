@@ -7,7 +7,7 @@ class PurchaseRejectReasonWizard(models.TransientModel):
     _name = "purchase.reject.reason.wizard"
     _description = "Reject Reason Wizard"
 
-   # reject_reason = fields.Text(string="Reject Reason")
+    #reject_reason = fields.Text(string="Reject Reason")
     reject_reason = fields.Text(string="Type Rejection Reason")
     reject_reason_sel = fields.Selection(
         [('expensive', 'Expensive'), ('material', 'Material quality is not good'), ], 'Choose a Reason')

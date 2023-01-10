@@ -5,14 +5,14 @@ from datetime import datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
-
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
     _description = "Purchase Approval"
 
     state = fields.Selection(selection_add=[('wait_approval', 'Waiting For Approval'),
                                             ('approval', 'Approval'),
-                                            ('rejected', 'Rejected')])
+                                            ('rejected', 'Rejected'),
+                                            ('partial_approve', 'Partial Approved')])
     has_approval = fields.Boolean(compute="_compute_has_approval")
 
     purchase_history_ids = fields.One2many(
@@ -21,7 +21,7 @@ class PurchaseOrder(models.Model):
     purchase_approval = fields.Boolean(compute="_compute_purchase_approval")
     # custom field
     po_type = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ], 'Type')
+        [('service', 'Service'), ('material', 'Material'), ('rent', 'Rent')], 'Type')
 
     def _compute_purchase_approval(self):
         for purchase in self:
@@ -44,7 +44,13 @@ class PurchaseOrder(models.Model):
             else:
                 purchase.purchase_approval = True
 
-
+            approval_vendor_line = self.env['purchase.approval'].search([
+                ("new_po_type", '=', purchase.po_type)
+            ])
+            if approval_vendor_line:
+                purchase.purchase_approval = True
+            else:
+                purchase.purchase_approval = True
 
     def _compute_has_approval(self):
         for purchase in self:
@@ -60,7 +66,7 @@ class PurchaseOrder(models.Model):
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
                 if is_rejected:
                     purchase.write({'state': 'rejected'})
-                if not is_rejected and purchase.state == 'wait_approval' and user_id and user_id.id == self.env.user.id:
+                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and user_id and user_id.id == self.env.user.id:
 
                     purchase.has_approval = True
                 else:
@@ -72,7 +78,7 @@ class PurchaseOrder(models.Model):
                 is_rejected = any(
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
 
-                if not is_rejected and purchase.state == 'wait_approval' and approval_id and approval_id.status == 'pending':
+                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and approval_id and approval_id.status == 'pending':
                     purchase.has_approval = True
                 else:
                     purchase.has_approval = False
@@ -86,6 +92,10 @@ class PurchaseOrder(models.Model):
 
         if self.purchase_history_ids and all([line.status == 'approve' for line in self.purchase_history_ids]):
             self.write({'state': 'approval'})
+        elif self.purchase_history_ids and [line.status == 'approve' for line in self.purchase_history_ids]:
+            self.write({'state': 'partial_approve'})
+        
+       
 
     def too_approve(self):
 
@@ -95,11 +105,12 @@ class PurchaseOrder(models.Model):
         #     ('approval_id.document_type', '=', 'purchase'),
         # ])
         approval = self.env['purchase.approval'].search(
-            [('custom_vendor', '=', self.partner_id.id),
-             ('document_type', '=', 'purchase')])
+            ["|",('custom_vendor', '=', self.partner_id.id),
+             ('document_type', '=', 'purchase'), ("new_po_type", '=', self.po_type)])
         if not approval:
             approval = self.env['purchase.approval'].search(
                 [('custom_vendor', '=', False),
+                 ("new_po_type", '=', False),
                  ('document_type', '=', 'purchase')])
         # raise UserError(approval)
         for ai in approval:
@@ -131,7 +142,6 @@ class PurchaseOrder(models.Model):
         #             self.write({'state': 'wait_approval'})
         #         else:
         #             self.write({'state': 'approval'})
-
 
     def button_confirm(self):
         for order in self:
@@ -165,5 +175,4 @@ class PurchaseApprovalsHistory(models.Model):
 class SiteRequest(models.Model):
     _inherit = "purchase.requisition"
     po_type_site = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ], 'Type')
-
+        [('service', 'Service'), ('material', 'Material'),('rent', 'Rent') ], 'Type')
