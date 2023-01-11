@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="hr_qr" model="ir.ui.view">
+        <field name="name">account.asset.qr</field>
+        <field name="model">account.asset</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="generate_asset_qr" type="object" string="Generate Qr" class="btn btn-primary"/>
+            </xpath>
+           
+            <field name="name" position="after">
+                <group name="custom" col="2">
+                <group>
+              
+                <field name="img" widget='image' class="oe_avatar" />
+                </group>
+                </group>
+            </field>
+            <field name="prorata" position="after">
+               <group>
+                <field name="qr_code" widget="image" class="oe_avatar"/>
+                </group>
+            </field>
+        </field>
+    </record>
+</odoo>
