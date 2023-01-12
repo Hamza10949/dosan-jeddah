@@ -45,6 +45,13 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                 elif len(lst) >= 2:
                     # all_approvers=' & '.join(lst)
                     i["approval_history_lv"] = lst[0]
+    
+    def project_type(self):
+        if not self['x_studio_project_type']:
+            if self['requisition_id']:
+                if self['requisition_id'].x_studio_project_type:
+                    self['requisition_id'].x_studio_project_type=self['x_studio_project_type']
+    
 
 
 class Inherit_PurchaseReq(models.Model):
