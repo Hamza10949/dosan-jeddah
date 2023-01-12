@@ -23,7 +23,8 @@ class Inherit_PurchaseOrder_rfq(models.Model):
         for rec in self:
             if rec.order_line:
                 for lines in rec.order_line:
-                    rec["project_slv"] = lines.account_analytic_id.name
+                    if lines.account_analytic_id:
+                        rec["project_slv"] = lines.account_analytic_id.name
 
     def _purchase_order_approval(self):
         self.approval_history_lv = ''
