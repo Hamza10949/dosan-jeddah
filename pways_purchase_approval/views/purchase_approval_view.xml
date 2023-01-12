@@ -18,7 +18,9 @@
                 <sheet>
                     <group>
                         <group>
+                            
                             <field name="document_type"/>
+                            <field name="name_Approval"/>
                         </group>
 
                         <group>

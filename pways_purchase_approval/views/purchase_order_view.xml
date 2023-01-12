@@ -74,6 +74,19 @@
         </field>
     </record>
 
+    <record id="po_approvals" model="ir.ui.view">
+        <field name="name">po.approvals.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">   
+            <xpath expr="//field[@name='po_type']" position="after">
+                
+                <field name="select_Approvals" required="1"/>    
+                   
+            </xpath>              
+        </field>
+    </record>
+
 
 
     <record id="ap_res_config_settings_view_form_purchase" model="ir.ui.view">

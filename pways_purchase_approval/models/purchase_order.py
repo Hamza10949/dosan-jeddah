@@ -12,16 +12,21 @@ class PurchaseOrder(models.Model):
     state = fields.Selection(selection_add=[('wait_approval', 'Waiting For Approval'),
                                             ('approval', 'Approval'),
                                             ('rejected', 'Rejected'),
-                                            ('partial_approve', 'Partial Approved')])
+                                            ])
     has_approval = fields.Boolean(compute="_compute_has_approval")
 
     purchase_history_ids = fields.One2many(
         'purchase.approval.history', 'purchase_id', string="Purchase History", readonly=True)
     reject_reason = fields.Text(string="Reject Reason", copy=False)
+
+    # reject_reason_sel = fields.Selection(
+    #     [('expensive', 'Expensive'), ('material', 'Material'), ], 'Reason')
     purchase_approval = fields.Boolean(compute="_compute_purchase_approval")
     # custom field
     po_type = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'), ('rent', 'Rent')], 'Type')
+        [('service', 'Service'), ('material', 'Material'), ], 'Type')
+
+    select_Approvals = fields.Many2one('purchase.approval', string="Approvals")
 
     def _compute_purchase_approval(self):
         for purchase in self:
@@ -44,14 +49,6 @@ class PurchaseOrder(models.Model):
             else:
                 purchase.purchase_approval = True
 
-            approval_vendor_line = self.env['purchase.approval'].search([
-                ("new_po_type", '=', purchase.po_type)
-            ])
-            if approval_vendor_line:
-                purchase.purchase_approval = True
-            else:
-                purchase.purchase_approval = True
-
     def _compute_has_approval(self):
         for purchase in self:
             approval_sequence = self.env.company.sequence_approval
@@ -66,7 +63,7 @@ class PurchaseOrder(models.Model):
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
                 if is_rejected:
                     purchase.write({'state': 'rejected'})
-                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and user_id and user_id.id == self.env.user.id:
+                if not is_rejected and purchase.state == 'wait_approval' and user_id and user_id.id == self.env.user.id:
 
                     purchase.has_approval = True
                 else:
@@ -78,7 +75,7 @@ class PurchaseOrder(models.Model):
                 is_rejected = any(
                     [status == 'reject' for status in purchase.purchase_history_ids.mapped('status')])
 
-                if not is_rejected and (purchase.state == 'wait_approval' or purchase.state == 'partial_approve' ) and approval_id and approval_id.status == 'pending':
+                if not is_rejected and purchase.state == 'wait_approval' and approval_id and approval_id.status == 'pending':
                     purchase.has_approval = True
                 else:
                     purchase.has_approval = False
@@ -92,10 +89,15 @@ class PurchaseOrder(models.Model):
 
         if self.purchase_history_ids and all([line.status == 'approve' for line in self.purchase_history_ids]):
             self.write({'state': 'approval'})
-        elif self.purchase_history_ids and [line.status == 'approve' for line in self.purchase_history_ids]:
-            self.write({'state': 'partial_approve'})
-        
-       
+            #self.write({'state': 'partially_approved'})
+
+        # if self.purchase_history_ids and all([line.status == 'pending' for line in self.purchase_history_ids]):
+        #     self.write({'state': 'partially_approved'})
+        # raise UserError(self.state)
+
+        # for his_line in self.purchase_history_ids:
+        #     if his_line[0].status == 'approve' and his_line[1].status == 'pending':
+        #         self.write({'state': 'partially_approved'})
 
     def too_approve(self):
 
@@ -105,27 +107,75 @@ class PurchaseOrder(models.Model):
         #     ('approval_id.document_type', '=', 'purchase'),
         # ])
         approval = self.env['purchase.approval'].search(
-            ["|",('custom_vendor', '=', self.partner_id.id),
-             ('document_type', '=', 'purchase'), ("new_po_type", '=', self.po_type)])
-        if not approval:
-            approval = self.env['purchase.approval'].search(
-                [('custom_vendor', '=', False),
-                 ("new_po_type", '=', False),
-                 ('document_type', '=', 'purchase')])
-        # raise UserError(approval)
-        for ai in approval:
-            approval_lines = self.env['purchase.approval.lines'].search([
-                ('limit', '<=', self.amount_total), ('approval_id', '=', ai.id)
-                # ('approval_id.document_type', '=', 'purchase'),
-            ])
-            # raise UserError(approval_lines)
-            if approval_lines:
-                for line in approval_lines:
-                    data.append((0, 0, {'user_id': line.user_id.id}))
-                self.purchase_history_ids = data
-                self.write({'state': 'wait_approval'})
-            else:
-                self.write({'state': 'approval'})
+            [('custom_vendor', '=', self.partner_id.id),
+             ('document_type', '=', 'purchase')])
+
+        # service_approval = self.env['purchase.approval'].search(
+        #     [('new_po_type', '=', 'service')])
+
+        # #raise UserError(approval)
+        # for ser in service_approval:
+        #     approval_lines_ser = self.env['purchase.approval'].search([
+        #         ('id', '=', ser.id)
+        #         # ('approval_id.document_type', '=', 'purchase'),
+        #     ])
+        #     # raise UserError(approval_lines)
+        #     if approval_lines_ser:
+        #         for linee in approval_lines_ser:
+        #             data.append((0, 0, {'user_id': linee.user_id.id}))
+        #         self.purchase_history_ids = data
+        #         self.write({'state': 'wait_approval'})
+        #     else:
+        #         self.write({'state': 'approval'})
+
+# ----------------------------------------------------------------------
+        search_approval_id = self.env['purchase.approval'].search(
+            [('id', '=', self.select_Approvals.id)])
+
+        #raise UserError(search_approval_id)
+        # for appr in search_approval_id:
+        #     approval_lines_ser = self.env['purchase.approval'].search([
+        #         ('limit', '<=', self.amount_total), ('approval_id', '=', appr.id)
+        #         # ('approval_id.document_type', '=', 'purchase'),
+        #     ])
+        # raise UserError(approval_lines)
+        if search_approval_id:
+            for appr_line in search_approval_id:
+                approval_lines = self.env['purchase.approval.lines'].search(
+                    [('limit', '<=', self.amount_total), ('approval_id', '=', appr_line.id), ])
+                if approval_lines:
+                    for k in approval_lines:
+
+                        data.append((0, 0, {'user_id': k.user_id.id}))
+                    self.purchase_history_ids = data
+                    self.write({'state': 'wait_approval'})
+                else:
+                    self.write({'state': 'approval'})
+
+# -------------------------------------------------------------------------------
+
+    # ========================================
+
+        # if not approval:
+        #     approval = self.env['purchase.approval'].search(
+        #         [('custom_vendor', '=', False),
+        #          ('document_type', '=', 'purchase')])
+        # # raise UserError(approval)
+        # for ai in approval:
+        #     approval_lines = self.env['purchase.approval.lines'].search([
+        #         ('limit', '<=', self.amount_total), ('approval_id', '=', ai.id)
+        #         # ('approval_id.document_type', '=', 'purchase'),
+        #     ])
+        #     # raise UserError(approval_lines)
+        #     if approval_lines:
+        #         for line in approval_lines:
+        #             data.append((0, 0, {'user_id': line.user_id.id}))
+        #         self.purchase_history_ids = data
+        #         self.write({'state': 'wait_approval'})
+        #     else:
+        #         self.write({'state': 'approval'})
+
+    # ==============================================
 
         # if not approval:
         #     approval2 = self.env['purchase.approval'].search(
@@ -175,4 +225,4 @@ class PurchaseApprovalsHistory(models.Model):
 class SiteRequest(models.Model):
     _inherit = "purchase.requisition"
     po_type_site = fields.Selection(
-        [('service', 'Service'), ('material', 'Material'),('rent', 'Rent') ], 'Type')
+        [('service', 'Service'), ('material', 'Material'), ], 'Type')
