@@ -16,12 +16,14 @@
     ],
 
     "data": [
+        'security/ir.model.access.csv',
         'security/p_restrict.xml',
         'view/restrict.xml',
         'view/project_fields.xml',
         'view/inventory_custom_fields.xml',
         'view/contractor.xml',
         'view/product_cus_chngs.xml',
+        'view/project_type.xml',
 
 
 

@@ -1,0 +1,45 @@
+  <odoo>  
+
+         <record id="show_projectValue_tab" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+            
+            <notebook>
+                    <page string='Product Value' attrs="{'invisible':[('state','!=','purchase')]}" > 
+                    <group id="sync_group">
+                    <group string="Project Value" name="product_info_group" >
+                    <field name="compute_project_value"  />
+                    <field name="po_bill_state" invisible='1' attrs="{'invisible':[('state','!=','purchase')]}"/>
+                </group>
+                </group>
+                </page>
+                    </notebook>
+            
+            </field>
+        </record>
+
+         <!-- <record id="show_button_name" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_down_pay.product_template_inherit" />
+            <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_bill']" position="attributes">
+            <attribute name="t-if">po_bill_state is 'in_payment'</attribute> 
+            </xpath> 
+            <attribute name="attrs">{'invisible': [('po_bill_state', '=', 'in_payment')]} </attribute>
+                <attribute name="string" > Extra Payment  </attribute> 
+                
+            </xpath>
+            
+        
+            
+            </field>
+        </record> -->
+
+     
+       
+    </odoo>
+
+    

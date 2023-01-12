@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="po_value_tab" model="ir.ui.view">
+        <field name="name">po.form.tab</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"></field>
+        <field name="arch" type="xml">
+           <notebook>
+                <page string='Project Value' attrs="{'invisible':[('state','!=','purchase')]}"> 
+                <group id="project_value">
+                  <group string="Project Value" name="academic_info_group" attrs="{'invisible':[('state','!=','purchase')]}">
+                   <field name="total_amnt_rem" attrs="{'invisible':[('state','!=','purchase')]}"></field> 
+             
+              </group>
+              </group>
+             </page>
+                </notebook>
+
+           
+        </field>
+   </record>
+
+</odoo>
