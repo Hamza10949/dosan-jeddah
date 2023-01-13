@@ -9,8 +9,8 @@ class Inherit_PurchaseOrder_rfq(models.Model):
         string="Project", compute="_purchase_order_project")
     approval_history_lv = fields.Char(
         string="Approval status", compute="_purchase_order_approval")
-    po_proj_type = fields.Many2one('project.type.custom', string="Proj Type",compute="_project_type")
-
+    po_proj_type = fields.Many2one('project.type.custom', string="Proj Type",related="requisition_id.sitereq_proj_type")
+    
 
     def _purchase_order_project(self):
         self.project_slv = ''
@@ -41,8 +41,9 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                     i["approval_history_lv"] = lst[0]
     
     def _project_type(self):
-        if self.requisition_id.x_studio_project_type:
-             self.requisition_id.x_studio_project_type=self['po_proj_type']
+        self.po_proj_type=False
+        if self.requisition_id.sitereq_proj_type:
+             self.requisition_id.sitereq_proj_type=self['po_proj_type']
     
 
 
@@ -79,7 +80,7 @@ class Inherit_PurchaseRequi(models.Model):
                     'date_planned': datetime.today(),
                     'date_order': datetime.today(),
                     'po_type': self.po_type_site,
-                    'po_proj_type':self.sitereq_proj_type,
+                   
 
 
 
