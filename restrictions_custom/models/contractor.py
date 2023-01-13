@@ -41,11 +41,8 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                     i["approval_history_lv"] = lst[0]
     
     def _project_type(self):
-        self['po_proj_type']=False
-        if not self['po_proj_type']:
-            if self['requisition_id']:
-                if self['requisition_id'].sitereq_proj_type:
-                    self['requisition_id'].sitereq_proj_type=self['po_proj_type']
+        if self.requisition_id.x_studio_project_type:
+             self.requisition_id.x_studio_project_type=self['po_proj_type']
     
 
 
