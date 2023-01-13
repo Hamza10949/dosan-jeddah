@@ -8,7 +8,8 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
              <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="po_type" required="1"/>       
+                <field name="po_type" required="1"/>
+                <field name="po_proj_type" />            
             </xpath> 
                 <xpath expr="//button[@name='action_rfq_send']" position="after">
 
@@ -69,7 +70,8 @@
         <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
         <field name="arch" type="xml">   
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="po_type_site" required="1"/>       
+                <field name="po_type_site" required="1"/> 
+                <field name="sitereq_proj_type" />       
             </xpath>              
         </field>
     </record>
