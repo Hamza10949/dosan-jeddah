@@ -9,15 +9,9 @@ class Inherit_PurchaseOrder_rfq(models.Model):
         string="Project", compute="_purchase_order_project")
     approval_history_lv = fields.Char(
         string="Approval status", compute="_purchase_order_approval")
+    po_proj_type = fields.Many2one('project.type.custom', string="Proj Type",compute="_project_type")
 
-    # def _purchase_order_project(self):
-    #     self.project_slv=''
-    #     for rec in self:
-    #         if rec.order_line:
-    #             project= rec.requisition_id.line_ids
-    #             if project:
-    #                 for lines in project:
-    #                     rec["project_slv"]=lines.account_analytic_id.name
+
     def _purchase_order_project(self):
         self.project_slv = ''
         for rec in self:
@@ -46,11 +40,12 @@ class Inherit_PurchaseOrder_rfq(models.Model):
                     # all_approvers=' & '.join(lst)
                     i["approval_history_lv"] = lst[0]
     
-    def project_type(self):
-        if not self['x_studio_project_type']:
+    def _project_type(self):
+        self['po_proj_type']=False
+        if not self['po_proj_type']:
             if self['requisition_id']:
-                if self['requisition_id'].x_studio_project_type:
-                    self['requisition_id'].x_studio_project_type=self['x_studio_project_type']
+                if self['requisition_id'].sitereq_proj_type:
+                    self['requisition_id'].sitereq_proj_type=self['po_proj_type']
     
 
 
@@ -64,6 +59,7 @@ class Inherit_PurchaseRequi(models.Model):
     _inherit = "purchase.requisition"
     project_lv = fields.Char(string="Project")
     project_plv = fields.Char(string="Project", compute="_site_req_project")
+    sitereq_proj_type = fields.Many2one('project.type.custom', string="Proj Type")
 
     def _site_req_project(self):
         self.project_plv = ''
@@ -86,6 +82,7 @@ class Inherit_PurchaseRequi(models.Model):
                     'date_planned': datetime.today(),
                     'date_order': datetime.today(),
                     'po_type': self.po_type_site,
+                    'po_proj_type':self.sitereq_proj_type,
 
 
 
