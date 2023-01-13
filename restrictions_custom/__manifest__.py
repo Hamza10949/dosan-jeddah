@@ -24,6 +24,7 @@
         'view/contractor.xml',
         'view/product_cus_chngs.xml',
         'view/project_type.xml',
+        'view/proj_type.xml',
 
 
 
